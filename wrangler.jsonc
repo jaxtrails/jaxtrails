@@ -1,0 +1,11 @@
+{
+  // Tells Cloudflare to publish the built site (the "dist" folder) as static files.
+  // "name" must match the project name in the Cloudflare dashboard.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "jaxtrails",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}
