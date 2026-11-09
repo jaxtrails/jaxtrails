@@ -6,7 +6,7 @@ eyebrow: About this place
 active: about
 ---
 
-[Write a few paragraphs here: who you are, why you started JaxTrails, and what you hope to get out of writing it.]
+Okay, testing this out - something that seemingly would have been impossible 2-3 years ago for me is now available after 2 nights messing around on my computer - crazy!
 
 ## What you'll find here
 
