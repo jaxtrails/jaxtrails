@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ThoughtsView from '../../components/ThoughtsView.astro';
+import { getThoughts } from '../../lib/content';
+
+const posts = await getThoughts();
+---
+
+<BaseLayout title="Trail Thoughts" description="Personal writing: reflections, books, and everything else." active="thoughts">
+  <ThoughtsView posts={posts} blurb="Personal writing, in three streams: Reflections, Books, and Everything Else." />
+</BaseLayout>

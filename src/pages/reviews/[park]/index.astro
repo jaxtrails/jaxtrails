@@ -1,0 +1,71 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TrailCard from '../../../components/TrailCard.astro';
+import SampleTag from '../../../components/SampleTag.astro';
+import { fmtDate, getParks, getTrails, trailCount, trailsInPark, type Park } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const parks = await getParks();
+  return parks.map((park) => ({ params: { park: park.id }, props: { park } }));
+}
+
+const { park } = Astro.props as { park: Park };
+const [parks, allTrails] = await Promise.all([getParks(), getTrails()]);
+const trails = trailsInPark(allTrails, park.id);
+const otherParks = parks.filter((p) => p.id !== park.id);
+const { Content } = await render(park);
+---
+
+<BaseLayout title={park.data.title} description={park.data.summary} active="reviews">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/reviews/">Trail Reviews</a>
+    <span aria-hidden="true">&rsaquo;</span>
+    <span aria-current="page">{park.data.title}</span>
+  </nav>
+
+  <header class="article-head">
+    <div class="eyebrow">Park review</div>
+    <h1>{park.data.title}<SampleTag show={park.data.sample} /></h1>
+    <p class="standfirst">{park.data.summary}</p>
+    <div class="label">Visited {fmtDate(park.data.visited)} &middot; {trailCount(trails.length)}</div>
+  </header>
+
+  <div class="cols">
+    <div class="main">
+      <div class="prose" style="padding-bottom: 40px"><Content /></div>
+
+      <section aria-labelledby="trails-heading">
+        <div class="section-title">
+          <h2 id="trails-heading">Trails in this park</h2>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        {trails.length === 0 && <p class="empty">No trails reviewed yet.</p>}
+        {trails.map((t) => <TrailCard trail={t} />)}
+      </section>
+    </div>
+
+    <aside class="side">
+      {
+        park.data.plan && (
+          <div class="panel">
+            <h2>Plan your visit</h2>
+            <p>{park.data.plan}</p>
+          </div>
+        )
+      }
+      {
+        otherParks.length > 0 && (
+          <div class="panel">
+            <div class="panel-title">More parks</div>
+            <div class="links">
+              {otherParks.map((p) => (
+                <a href={`/reviews/${p.id}/`}>{p.data.title}</a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </aside>
+  </div>
+</BaseLayout>

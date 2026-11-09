@@ -1,0 +1,39 @@
+---
+import Blazes from './Blazes.astro';
+import SampleTag from './SampleTag.astro';
+import { fmtDate, type Park, type Trail } from '../lib/content';
+
+interface Props {
+  park: Park;
+  trails: Trail[];
+}
+const { park, trails } = Astro.props;
+---
+
+<article class="park">
+  <div class="park-head">
+    <div class="label"><span class="accent">Park</span> &middot; {fmtDate(park.data.visited)}</div>
+    <h2>
+      <a href={`/reviews/${park.id}/`}>{park.data.title}</a>
+      <SampleTag show={park.data.sample} />
+    </h2>
+    <p>{park.data.summary}</p>
+  </div>
+  <div class="park-trails">
+    <div class="label">Trails in this park &middot; {trails.length}</div>
+    {
+      trails.length === 0 ? (
+        <p class="empty">No trails reviewed yet.</p>
+      ) : (
+        trails.map((t) => (
+          <div class="trail-row">
+            <a href={`/reviews/${park.id}/${t.id}/`}>{t.data.title}</a>
+            <span class="t-dist">{t.data.distance}</span>
+            <span class="t-diff">{t.data.difficulty}</span>
+            <Blazes rating={t.data.rating} size="sm" />
+          </div>
+        ))
+      )
+    }
+  </div>
+</article>

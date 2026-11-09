@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { categorySlug, getParks, getThoughts, getTrails, trailCount, trailsInPark } from '../lib/content';
+
+const [parks, trails, thoughts] = await Promise.all([getParks(), getTrails(), getThoughts()]);
+const latestParks = parks.slice(0, 3);
+const latestThoughts = thoughts.slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="eyebrow">Trail reviews and personal writing</div>
+    <h1>Notes from the trail, written down.</h1>
+    <p>
+      Honest reviews of parks and the trails inside them on one path, slower writing about what I think about out there
+      on the other. Pick a direction.
+    </p>
+  </section>
+
+  <div class="fork">
+    <section>
+      <a class="sign" href="/reviews/">Trail Reviews</a>
+      <p class="blurb">
+        Parks and the trails inside them, rated and written up: what it's like, who it's for, and what to know before
+        you go.
+      </p>
+      <div class="rows">
+        {
+          latestParks.length === 0 ? (
+            <p class="empty">No reviews yet.</p>
+          ) : (
+            latestParks.map((p) => (
+              <div class="item">
+                <a href={`/reviews/${p.id}/`}>{p.data.title}</a>
+                <div class="label">Park &middot; {trailCount(trailsInPark(trails, p.id).length)}</div>
+              </div>
+            ))
+          )
+        }
+      </div>
+      <a class="more" href="/reviews/">All parks and trails &rarr;</a>
+    </section>
+
+    <section>
+      <a class="sign sign--right" href="/thoughts/">Trail Thoughts</a>
+      <p class="blurb">Personal writing in three streams: Reflections, Books, and Everything Else.</p>
+      <div class="rows">
+        {
+          latestThoughts.length === 0 ? (
+            <p class="empty">No posts yet.</p>
+          ) : (
+            latestThoughts.map((t) => (
+              <div class="item">
+                <a href={`/thoughts/${t.id}/`}>{t.data.title}</a>
+                <div class="label">
+                  {t.data.date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    timeZone: 'UTC',
+                  })}{' '}
+                  &middot;{' '}
+                  <a class="accent" href={`/thoughts/category/${categorySlug(t.data.category)}/`} style="text-decoration: none">
+                    {t.data.category}
+                  </a>
+                </div>
+              </div>
+            ))
+          )
+        }
+      </div>
+      <a class="more" href="/thoughts/">All trail thoughts &rarr;</a>
+    </section>
+  </div>
+
+  <section class="about-strip">
+    <div class="head">
+      <span class="bar" aria-hidden="true"></span>
+      <div class="label">About this place</div>
+    </div>
+    <p>[Two or three sentences about you and why you're writing.]</p>
+    <a class="more" href="/about/">More about me &rarr;</a>
+  </section>
+</BaseLayout>

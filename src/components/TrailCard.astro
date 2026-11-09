@@ -1,0 +1,31 @@
+---
+import Blazes from './Blazes.astro';
+import SampleTag from './SampleTag.astro';
+import { fmtDate, type Park, type Trail } from '../lib/content';
+
+interface Props {
+  trail: Trail;
+  // Pass the park to show its name above the trail (used in the "all trails" list).
+  park?: Park;
+}
+const { trail, park } = Astro.props;
+const href = `/reviews/${trail.data.park.id}/${trail.id}/`;
+---
+
+<article class="trail-card">
+  <div class="label">
+    <span class="accent">Trail review</span>
+    {park && <> &middot; {park.data.title}</>} &middot; {fmtDate(trail.data.visited)}
+  </div>
+  <h3>
+    <a href={href}>{trail.data.title}</a>
+    <SampleTag show={trail.data.sample} />
+  </h3>
+  <p>{trail.data.summary}</p>
+  <div class="stats">
+    <div><div class="k">Distance</div><div class="v">{trail.data.distance}</div></div>
+    <div><div class="k">Difficulty</div><div class="v">{trail.data.difficulty}</div></div>
+    <div><div class="k">Rating</div><Blazes rating={trail.data.rating} /></div>
+    <a class="more go" href={href}>Read the review &rarr;</a>
+  </div>
+</article>

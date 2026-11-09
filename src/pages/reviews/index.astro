@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReviewsHead from '../../components/ReviewsHead.astro';
+import ReviewsSide from '../../components/ReviewsSide.astro';
+import ParkCard from '../../components/ParkCard.astro';
+import { getParks, getTrails, trailsInPark } from '../../lib/content';
+
+const [parks, trails] = await Promise.all([getParks(), getTrails()]);
+---
+
+<BaseLayout
+  title="Trail Reviews"
+  description="Parks and the trails inside them, rated and written up."
+  active="reviews"
+>
+  <ReviewsHead current="park" />
+  <div class="cols">
+    <div class="main">
+      {
+        parks.length === 0 ? (
+          <p class="empty">No reviews yet.</p>
+        ) : (
+          <div class="parks">
+            {parks.map((p) => (
+              <ParkCard park={p} trails={trailsInPark(trails, p.id)} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+    <ReviewsSide />
+  </div>
+</BaseLayout>

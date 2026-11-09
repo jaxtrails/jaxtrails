@@ -1,0 +1,19 @@
+---
+interface Props {
+  current: 'park' | 'trails';
+}
+const { current } = Astro.props;
+---
+
+<section class="page-head">
+  <h1 class="sign sign--page">Trail Reviews</h1>
+  <p>
+    Parks first, then the trails inside them. Each park gets a write-up, and every trail gets its own review and
+    rating.
+  </p>
+</section>
+
+<div class="chips" role="group" aria-label="View">
+  <a class="chip" href="/reviews/" aria-current={current === 'park' ? 'true' : undefined}>By park</a>
+  <a class="chip" href="/reviews/all-trails/" aria-current={current === 'trails' ? 'true' : undefined}>All trails</a>
+</div>

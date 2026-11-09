@@ -1,0 +1,24 @@
+---
+import SampleTag from './SampleTag.astro';
+import { categorySlug, fmtDate, type Thought } from '../lib/content';
+
+interface Props {
+  post: Thought;
+}
+const { post } = Astro.props;
+---
+
+<article class="post">
+  <div class="label meta">
+    <span>{fmtDate(post.data.date)}</span>
+    <a class="accent" href={`/thoughts/category/${categorySlug(post.data.category)}/`} style="text-decoration: none">
+      {post.data.category}
+    </a>
+  </div>
+  <h2>
+    <a href={`/thoughts/${post.id}/`}>{post.data.title}</a>
+    <SampleTag show={post.data.sample} />
+  </h2>
+  <p>{post.data.summary}</p>
+  <a class="more" href={`/thoughts/${post.id}/`}>Read the post &rarr;</a>
+</article>

@@ -1,0 +1,101 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Blazes from '../../../components/Blazes.astro';
+import SampleTag from '../../../components/SampleTag.astro';
+import {
+  categorySlug,
+  fmtDate,
+  getParks,
+  getThoughts,
+  getTrails,
+  thoughtsForTrail,
+  trailsInPark,
+  type Park,
+  type Trail,
+} from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const [parks, trails] = await Promise.all([getParks(), getTrails()]);
+  const parkById = new Map(parks.map((p) => [p.id, p]));
+  return trails
+    .filter((t) => parkById.has(t.data.park.id))
+    .map((trail) => ({
+      params: { park: trail.data.park.id, trail: trail.id },
+      props: { trail, park: parkById.get(trail.data.park.id)! },
+    }));
+}
+
+const { trail, park } = Astro.props as { trail: Trail; park: Park };
+const [allTrails, allThoughts] = await Promise.all([getTrails(), getThoughts()]);
+const siblings = trailsInPark(allTrails, park.id).filter((t) => t.id !== trail.id);
+const related = thoughtsForTrail(trail, allThoughts);
+const { Content } = await render(trail);
+---
+
+<BaseLayout title={`${trail.data.title} · ${park.data.title}`} description={trail.data.summary} active="reviews">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/reviews/">Trail Reviews</a>
+    <span aria-hidden="true">&rsaquo;</span>
+    <a href={`/reviews/${park.id}/`}>{park.data.title}</a>
+    <span aria-hidden="true">&rsaquo;</span>
+    <span aria-current="page">{trail.data.title}</span>
+  </nav>
+
+  <header class="article-head">
+    <div class="eyebrow">Trail review</div>
+    <h1>{trail.data.title}<SampleTag show={trail.data.sample} /></h1>
+    <p class="standfirst">{trail.data.summary}</p>
+    <div class="stats" style="max-width: 34em">
+      <div><div class="k">Distance</div><div class="v">{trail.data.distance}</div></div>
+      <div><div class="k">Difficulty</div><div class="v">{trail.data.difficulty}</div></div>
+      <div><div class="k">Rating</div><Blazes rating={trail.data.rating} size="lg" /></div>
+    </div>
+    <div class="label" style="margin-top: 18px">
+      In <a class="accent" href={`/reviews/${park.id}/`} style="text-decoration: none">{park.data.title}</a>
+      &middot; Hiked {fmtDate(trail.data.visited)}
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main">
+      <div class="prose"><Content /></div>
+
+      {
+        related.length > 0 && (
+          <section class="related">
+            <h2>Related writing</h2>
+            <div class="links">
+              {related.map((t) => (
+                <a href={`/thoughts/${t.id}/`}>
+                  {t.data.title}
+                  <small>{t.data.category}</small>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+
+    <aside class="side">
+      {
+        siblings.length > 0 && (
+          <div class="panel">
+            <div class="panel-title">More in {park.data.title}</div>
+            <div class="links">
+              {siblings.map((t) => (
+                <a href={`/reviews/${park.id}/${t.id}/`}>{t.data.title}</a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+      <div class="panel">
+        <h2>Back to the park</h2>
+        <p>Read the full write-up and see every trail reviewed there.</p>
+        <a class="more" href={`/reviews/${park.id}/`}>{park.data.title} &rarr;</a>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>

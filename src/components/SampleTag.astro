@@ -1,0 +1,8 @@
+---
+interface Props {
+  show?: boolean;
+}
+const { show = false } = Astro.props;
+---
+
+{show && <span class="tag-sample">Sample</span>}

@@ -1,0 +1,15 @@
+---
+interface Props {
+  rating: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+const { rating, size = 'md' } = Astro.props;
+---
+
+<span
+  class:list={['blazes', size === 'sm' && 'blazes--sm', size === 'lg' && 'blazes--lg']}
+  role="img"
+  aria-label={`Rated ${rating} out of 5`}
+>
+  {[1, 2, 3, 4, 5].map((n) => <span class:list={['blaze', n > rating && 'blaze--empty']} />)}
+</span>

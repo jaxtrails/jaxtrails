@@ -1,0 +1,66 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SampleTag from '../../components/SampleTag.astro';
+import Blazes from '../../components/Blazes.astro';
+import {
+  categorySlug,
+  fmtDate,
+  getParks,
+  getThoughts,
+  getTrails,
+  trailsForThought,
+  type Thought,
+} from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getThoughts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Thought };
+const [parks, allTrails] = await Promise.all([getParks(), getTrails()]);
+const parkIds = new Set(parks.map((p) => p.id));
+const related = trailsForThought(post, allTrails).filter((t) => parkIds.has(t.data.park.id));
+const catSlug = categorySlug(post.data.category);
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.summary} active="thoughts">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/thoughts/">Trail Thoughts</a>
+    <span aria-hidden="true">&rsaquo;</span>
+    <a href={`/thoughts/category/${catSlug}/`}>{post.data.category}</a>
+  </nav>
+
+  <header class="article-head">
+    <div class="eyebrow">{post.data.category}</div>
+    <h1>{post.data.title}<SampleTag show={post.data.sample} /></h1>
+    <p class="standfirst">{post.data.summary}</p>
+    <div class="label">{fmtDate(post.data.date)}</div>
+  </header>
+
+  <div class="prose"><Content /></div>
+
+  {
+    related.length > 0 && (
+      <section class="related" style="max-width: 34em">
+        <h2>Related trail reviews</h2>
+        <div class="links">
+          {related.map((t) => (
+            <a href={`/reviews/${t.data.park.id}/${t.id}/`}>
+              {t.data.title}
+              <small>
+                {t.data.distance} &middot; {t.data.difficulty} &middot; <Blazes rating={t.data.rating} size="sm" />
+              </small>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <p style="margin-top: 40px">
+    <a class="more" href={`/thoughts/category/${catSlug}/`}>&larr; More {post.data.category}</a>
+  </p>
+</BaseLayout>

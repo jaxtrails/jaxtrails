@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReviewsHead from '../../components/ReviewsHead.astro';
+import ReviewsSide from '../../components/ReviewsSide.astro';
+import TrailCard from '../../components/TrailCard.astro';
+import { getParks, getTrails } from '../../lib/content';
+
+const [parks, allTrails] = await Promise.all([getParks(), getTrails()]);
+const parkById = new Map(parks.map((p) => [p.id, p]));
+// A trail only shows if its park is visible too.
+const trails = allTrails.filter((t) => parkById.has(t.data.park.id));
+---
+
+<BaseLayout title="All trails" description="Every trail reviewed, newest first." active="reviews">
+  <ReviewsHead current="trails" />
+  <div class="cols">
+    <div class="main">
+      {
+        trails.length === 0 ? (
+          <p class="empty">No trails reviewed yet.</p>
+        ) : (
+          <div class="trail-grid">
+            {trails.map((t) => (
+              <TrailCard trail={t} park={parkById.get(t.data.park.id)} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+    <ReviewsSide />
+  </div>
+</BaseLayout>

@@ -1,0 +1,288 @@
+/* JaxTrails: "Trail Sign" look. Colors and fonts are set once here. */
+:root {
+  --pine: #1e2b24;
+  --ground: #e9ece4;
+  --card: #f4f6f0;
+  --band: #eaeee5;
+  --line: #c3cabd;
+  --line-soft: #d5dbd0;
+  --ink: #1c2420;
+  --body: #38423c;
+  --muted: #4f5a53;
+  --ember: #a3441f; /* links and labels */
+  --blaze: #2f74cc; /* trail-marker blue (North Country Trail style) */
+  --nav-active: #e39a63;
+  --nav-text: #d5dcd2;
+  --on-pine: #eef1ea;
+  --serif: 'Newsreader', Georgia, serif;
+  --label: 'Oswald', 'Arial Narrow', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.5;
+}
+a { color: inherit; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 3px solid var(--blaze); outline-offset: 2px; }
+img { max-width: 100%; height: auto; }
+
+.skip {
+  position: absolute; left: -9999px; top: 8px;
+  background: var(--card); color: var(--ink); padding: 10px 16px; z-index: 10;
+}
+.skip:focus { left: 16px; }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* Small uppercase labels */
+.label {
+  font-family: var(--label);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.label .accent, .accent { color: var(--ember); }
+.eyebrow {
+  font-family: var(--label); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--ember);
+}
+.more {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-family: var(--label); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ember); text-decoration: none;
+}
+.more:hover { text-decoration: underline; }
+
+/* ---------- Header ---------- */
+.site-header { background: var(--pine); }
+.site-nav {
+  max-width: 1100px; margin: 0 auto; padding: 0 24px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 0 32px;
+}
+.brand {
+  display: flex; align-items: center; gap: 12px; min-height: 68px;
+  color: var(--on-pine); text-decoration: none;
+  font-family: var(--label); font-size: 26px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.brand:hover { text-decoration: none; }
+.blaze-mark { display: inline-block; width: 9px; height: 27px; background: var(--blaze); }
+.nav-links { display: flex; flex-wrap: wrap; gap: 0 6px; }
+.nav-links a {
+  display: flex; align-items: center; min-height: 68px; padding: 3px 14px 0;
+  font-family: var(--label); font-size: 15px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--nav-text); text-decoration: none; border-bottom: 3px solid transparent;
+}
+.nav-links a:hover { color: #fff; }
+.nav-links a[aria-current='page'] { color: #fff; border-bottom-color: var(--nav-active); }
+.site-header :focus-visible { outline-color: #fff; }
+
+/* ---------- Footer ---------- */
+.site-footer { margin-top: 80px; }
+.site-footer svg { display: block; width: 100%; height: 90px; }
+.footer-bar {
+  background: var(--pine); color: #c9d2c6; padding: 28px 24px 40px;
+  font-family: var(--label); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.footer-bar > div {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px;
+}
+.footer-bar a { color: inherit; text-decoration: none; }
+.footer-bar a:hover { text-decoration: underline; }
+
+/* ---------- Trail-sign headings ---------- */
+.sign {
+  --notch: 32px;
+  display: flex; align-items: center; min-height: 84px; margin: 0;
+  padding: 0 32px 0 calc(var(--notch) + 32px);
+  background: var(--pine); color: var(--on-pine); text-decoration: none;
+  font-family: var(--label); font-size: 34px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  clip-path: polygon(var(--notch) 0, 100% 0, 100% 100%, var(--notch) 100%, 0 50%);
+}
+a.sign:hover { text-decoration: none; background: #26382e; }
+.sign--right {
+  justify-content: flex-end;
+  padding: 0 calc(var(--notch) + 32px) 0 32px;
+  clip-path: polygon(0 0, calc(100% - var(--notch)) 0, 100% 50%, calc(100% - var(--notch)) 100%, 0 100%);
+}
+.sign--page {
+  --notch: 36px; min-height: 96px; width: fit-content; max-width: 100%;
+  font-size: clamp(30px, 6vw, 48px);
+}
+.page-head { padding: 64px 0 32px; }
+.page-head p { margin: 24px 0 0; font-size: 22px; line-height: 1.5; color: var(--body); max-width: 36em; }
+
+/* ---------- Blazes (ratings) ---------- */
+.blazes { display: inline-flex; gap: 4px; vertical-align: middle; }
+.blaze { width: 7px; height: 20px; background: var(--blaze); }
+.blaze--empty { background: transparent; border: 1.5px solid #6f7b73; }
+.blazes--sm .blaze { width: 6px; height: 18px; }
+.blazes--lg { gap: 6px; }
+.blazes--lg .blaze { width: 11px; height: 32px; }
+
+/* ---------- Layout helpers ---------- */
+.cols { display: flex; flex-wrap: wrap; gap: 48px 72px; align-items: flex-start; }
+.cols > .main { flex: 999 1 560px; min-width: 0; }
+.cols > .side { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+.fork { display: flex; flex-wrap: wrap; gap: 56px 48px; align-items: flex-start; }
+.fork > section { flex: 1 1 460px; min-width: 0; }
+.fork .blurb { margin: 20px 0 8px; font-size: 20px; line-height: 1.5; color: var(--body); }
+
+.panel { background: var(--card); border: 1px solid var(--line); padding: 28px; }
+.panel h2, .panel .panel-title {
+  margin: 0; font-family: var(--label); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+}
+.panel p { margin: 14px 0 4px; font-size: 18px; line-height: 1.55; color: var(--body); }
+.panel .panel-title + .links { margin-top: 8px; }
+.links a {
+  display: block; padding: 12px 0; border-top: 1px solid var(--line-soft);
+  color: var(--ink); text-decoration: none; font-size: 19px; font-weight: 600;
+}
+.links a:hover { text-decoration: underline; }
+.links small { display: block; margin-top: 2px; font-size: 16px; font-weight: 400; line-height: 1.4; color: var(--muted); }
+
+.hero { padding: 72px 0 56px; }
+.hero h1 { margin: 16px 0 20px; font-size: clamp(40px, 7vw, 64px); line-height: 1.04; font-weight: 600; letter-spacing: -0.015em; max-width: 15em; }
+.hero p { margin: 0; font-size: 22px; line-height: 1.5; color: var(--body); max-width: 36em; }
+
+/* Simple list rows (home page) */
+.rows { margin-top: 16px; border-bottom: 1px solid var(--line); }
+.rows .item { padding: 18px 0; border-top: 1px solid var(--line); }
+.rows .item > a { font-size: 25px; font-weight: 600; line-height: 1.2; color: var(--ink); text-decoration: none; }
+.rows .item > a:hover { text-decoration: underline; }
+.rows .item .label { margin-top: 4px; font-size: 12px; }
+.empty { padding: 24px 0; color: var(--muted); font-style: italic; }
+
+/* ---------- Filter chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 40px; }
+.chip {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px;
+  color: var(--pine); border: 1px solid var(--pine); text-decoration: none;
+  font-family: var(--label); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.chip:hover { background: rgba(30, 43, 36, 0.08); text-decoration: none; }
+.chip[aria-current='true'] { background: var(--pine); color: var(--on-pine); }
+
+/* ---------- Park cards with trails inside ---------- */
+.parks { display: flex; flex-direction: column; gap: 28px; }
+.park { background: var(--card); border: 1px solid var(--line); }
+.park-head { padding: 26px 28px 22px; }
+.park-head h2 { margin: 10px 0 0; font-size: 34px; line-height: 1.12; font-weight: 600; }
+.park-head h2 a { color: var(--ink); text-decoration: none; }
+.park-head h2 a:hover { text-decoration: underline; }
+.park-head p { margin: 12px 0 0; font-size: 20px; line-height: 1.5; color: var(--body); max-width: 34em; }
+.park-trails { background: var(--band); border-top: 1px solid var(--line); padding: 18px 28px 14px; }
+.park-trails > .label { font-size: 12px; letter-spacing: 0.18em; padding-bottom: 6px; }
+.trail-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 24px;
+  padding: 12px 0; border-top: 1px solid #d0d7cb;
+}
+.trail-row a { flex: 1 1 200px; font-size: 21px; font-weight: 600; color: var(--ink); text-decoration: none; }
+.trail-row a:hover { text-decoration: underline; }
+.trail-row .t-dist { flex: 0 1 150px; font-size: 17px; color: var(--body); }
+.trail-row .t-diff { flex: 0 1 90px; font-size: 17px; color: var(--body); }
+
+/* ---------- Trail cards ---------- */
+.trail-card { background: var(--card); border: 1px solid var(--line); padding: 26px 28px; margin-bottom: 20px; }
+.trail-card h3 { margin: 8px 0 10px; font-size: 30px; line-height: 1.15; font-weight: 600; }
+.trail-card h3 a { color: var(--ink); text-decoration: none; }
+.trail-card h3 a:hover { text-decoration: underline; }
+.trail-card p { margin: 0 0 14px; font-size: 19px; line-height: 1.5; color: var(--body); }
+.trail-grid { display: flex; flex-wrap: wrap; gap: 24px; }
+.trail-grid .trail-card { flex: 1 1 320px; min-width: 0; margin: 0; display: flex; flex-direction: column; }
+.trail-grid .trail-card .stats { margin-top: auto; }
+.stats { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 28px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+.stats .k { font-family: var(--label); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.stats .v { font-size: 18px; font-weight: 600; }
+.stats .blazes { margin-top: 4px; display: flex; }
+.stats .go { margin-left: auto; }
+
+/* ---------- Thought posts (list) ---------- */
+.post { padding: 32px 0; border-top: 1px solid var(--line); }
+.post:last-child { border-bottom: 1px solid var(--line); }
+.post .meta { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.post h2 { margin: 12px 0 10px; font-size: 36px; line-height: 1.15; font-weight: 600; }
+.post h2 a { color: var(--ink); text-decoration: none; }
+.post h2 a:hover { text-decoration: underline; }
+.post p { margin: 0 0 8px; font-size: 20px; line-height: 1.55; color: var(--body); max-width: 34em; }
+
+/* ---------- Single page reading view ---------- */
+.crumbs {
+  padding: 20px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px;
+  font-family: var(--label); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+}
+.crumbs a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ember); text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+.article-head { padding: 8px 0 36px; }
+.article-head h1 { margin: 14px 0 16px; font-size: clamp(38px, 6.5vw, 64px); line-height: 1.04; font-weight: 600; letter-spacing: -0.015em; }
+.article-head .standfirst { margin: 0 0 18px; font-size: 24px; line-height: 1.45; color: var(--body); max-width: 30em; }
+
+.prose { font-size: 21px; line-height: 1.7; color: #2c3630; max-width: 34em; }
+.prose > :first-child { margin-top: 0; }
+.prose p { margin: 0 0 1.2em; }
+.prose h2 { margin: 1.8em 0 0.5em; font-size: 30px; line-height: 1.2; }
+.prose h3 { margin: 1.6em 0 0.4em; font-size: 24px; line-height: 1.25; }
+.prose a { color: var(--ember); }
+.prose blockquote { margin: 1.4em 0; padding-left: 1.2em; border-left: 4px solid var(--blaze); font-style: italic; }
+.prose ul, .prose ol { margin: 0 0 1.2em; padding-left: 1.4em; }
+.prose li { margin-bottom: 0.4em; }
+.prose img { display: block; margin: 1.6em 0; }
+.prose hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
+
+.related { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
+.related h2 {
+  margin: 0 0 4px; font-family: var(--label); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+}
+
+.section-title { display: flex; align-items: center; gap: 14px; padding-bottom: 20px; }
+.section-title h2 { margin: 0; font-family: var(--label); font-size: 22px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.section-title .rule { display: inline-block; width: 40px; height: 3px; background: var(--blaze); }
+
+.about-strip {
+  margin-top: 72px; background: var(--card); border: 1px solid var(--line); padding: 32px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 16px 40px;
+}
+.about-strip .head { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
+.about-strip .bar { display: inline-block; width: 8px; height: 24px; background: var(--blaze); }
+.about-strip p { margin: 0; flex: 1 1 360px; font-size: 19px; line-height: 1.55; color: var(--body); }
+
+/* ---------- Phones ---------- */
+@media (max-width: 640px) {
+  .site-nav { gap: 0; }
+  .brand { min-height: 56px; }
+  .nav-links { margin-left: -10px; }
+  .nav-links a {
+    min-height: 48px; padding: 3px 10px 0; font-size: 14px; letter-spacing: 0.08em;
+  }
+  .sign {
+    --notch: 22px; min-height: 64px; font-size: 26px;
+    padding: 0 18px 0 calc(var(--notch) + 16px);
+  }
+  .sign--right { padding: 0 calc(var(--notch) + 16px) 0 18px; }
+  .sign--page { --notch: 24px; min-height: 72px; font-size: clamp(26px, 8vw, 34px); }
+  .page-head { padding-top: 40px; }
+  .hero { padding-top: 48px; }
+}
+
+/* Marks content as placeholder until you replace it */
+.tag-sample {
+  display: inline-block; vertical-align: middle; margin-left: 10px; padding: 1px 8px;
+  border: 1px dashed var(--muted); color: var(--muted);
+  font-family: var(--label); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+}

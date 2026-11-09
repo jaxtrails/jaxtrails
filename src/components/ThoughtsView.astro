@@ -1,0 +1,53 @@
+---
+import PostItem from './PostItem.astro';
+import { CATEGORIES, type Thought } from '../lib/content';
+
+interface Props {
+  posts: Thought[];
+  current?: string; // category slug, or '' for all
+  blurb: string;
+}
+const { posts, current = '', blurb } = Astro.props;
+---
+
+<section class="page-head">
+  <h1 class="sign sign--right sign--page">Trail Thoughts</h1>
+  <p>{blurb}</p>
+</section>
+
+<div class="chips" role="group" aria-label="Filter by subcategory">
+  <a class="chip" href="/thoughts/" aria-current={current === '' ? 'true' : undefined}>All</a>
+  {
+    CATEGORIES.map((c) => (
+      <a class="chip" href={`/thoughts/category/${c.slug}/`} aria-current={current === c.slug ? 'true' : undefined}>
+        {c.name}
+      </a>
+    ))
+  }
+</div>
+
+<div class="cols">
+  <div class="main">
+    {posts.length === 0 ? <p class="empty">Nothing here yet.</p> : posts.map((p) => <PostItem post={p} />)}
+  </div>
+  <aside class="side">
+    <div class="panel">
+      <div class="panel-title">Subcategories</div>
+      <div class="links">
+        {
+          CATEGORIES.map((c) => (
+            <a href={`/thoughts/category/${c.slug}/`}>
+              {c.name}
+              <small>{c.blurb}</small>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Looking for a trail?</h2>
+      <p>Rated reviews of parks and their trails live on the other path.</p>
+      <a class="more" href="/reviews/">Trail Reviews &rarr;</a>
+    </div>
+  </aside>
+</div>

@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ThoughtsView from '../../../components/ThoughtsView.astro';
+import { CATEGORIES, categorySlug, getThoughts } from '../../../lib/content';
+
+export function getStaticPaths() {
+  return CATEGORIES.map((c) => ({ params: { category: c.slug }, props: { cat: c } }));
+}
+
+const { cat } = Astro.props;
+const all = await getThoughts();
+const posts = all.filter((t) => categorySlug(t.data.category) === cat.slug);
+---
+
+<BaseLayout title={cat.name} description={`Trail Thoughts: ${cat.blurb}`} active="thoughts">
+  <ThoughtsView posts={posts} current={cat.slug} blurb={cat.blurb} />
+</BaseLayout>

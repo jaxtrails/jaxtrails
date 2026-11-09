@@ -1,0 +1,14 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+// Used by plain Markdown pages such as About.
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description} active={frontmatter.active ?? ''}>
+  <div class="article-head" style="padding-top: 64px">
+    <div class="eyebrow">{frontmatter.eyebrow ?? 'JaxTrails'}</div>
+    <h1>{frontmatter.title}</h1>
+  </div>
+  <div class="prose"><slot /></div>
+</BaseLayout>
