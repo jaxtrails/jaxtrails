@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PostItem from '../../../../components/PostItem.astro';
+import EraBar from '../../../../components/EraBar.astro';
+import BookCover from '../../../../components/BookCover.astro';
+import { BOOKS, ERAS, SERIES, bookByNumber, eraOf, getSeriesState, shelfUrl, splitTitle } from '../../../../lib/books';
+
+const st = await getSeriesState();
+const cur = bookByNumber(SERIES.currentlyReading)!;
+const curEra = eraOf(cur);
+const up = BOOKS.filter((b) => st.status(b.n) === 'next').slice(0, 6);
+const eraName = (n: number) => ERAS[n - 1].name;
+---
+<BaseLayout title="America 250" description="250 books on American history, read in chronological order." active="thoughts">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/thoughts/">Trail Thoughts</a><span aria-hidden="true">&rsaquo;</span>
+    <a href="/thoughts/category/books/">Books</a><span aria-hidden="true">&rsaquo;</span><span>America 250</span>
+  </nav>
+  <section class="page-head" style="padding-top:24px">
+    <div class="eyebrow" style="margin-bottom:12px">A series in Books</div>
+    <h1 class="sign sign--right sign--page usa-sign">America 250</h1>
+    <p>250 books on American history, read in the order of the period each one covers, from first contact to today. Each book gets a review when I finish it.</p>
+  </section>
+  <div class="cols">
+    <div class="main">
+      <div class="section-title"><h2>Progress so far</h2><span class="rule"></span></div>
+      <p class="series-count" style="margin:0 0 12px">{st.readCount} of {SERIES.total} read</p>
+      <EraBar readByEra={st.readByEra} current={cur.era} />
+      <ol class="era-list">
+        {ERAS.map((e) => <li><span>{e.n}. {e.name}</span><b>{st.readByEra[e.n - 1]}/{e.quota}</b></li>)}
+      </ol>
+
+      <div class="section-title" style="margin-top:48px"><h2>Currently reading</h2><span class="rule"></span></div>
+      <div class="panel now">
+        <BookCover n={cur.n} />
+        <div>
+          <div class="book-title">{splitTitle(cur.title).main}</div>
+          <div class="label">{cur.author} &middot; {cur.year} &middot; {curEra.name}</div>
+        </div>
+      </div>
+
+      <a class="shelf-box" href={shelfUrl()}>
+        <span class="usa-stars">&#9733; &#9733; &#9733;</span>
+        <span class="shelf-title">See the shelf: all {SERIES.total} books</span>
+        <span class="series-count">{st.readCount} read &middot; 1 reading &middot; {SERIES.total - st.readCount - 1} up next</span>
+        <span class="series-open">Open the shelf &rarr;</span>
+      </a>
+
+      <div class="section-title" style="margin-top:48px"><h2>Latest reviews</h2><span class="rule"></span></div>
+      <label class="label" for="era-filter">Era</label>
+      <select id="era-filter" class="era-select">
+        <option value="">All</option>
+        {ERAS.map((e) => <option value={String(e.n)}>{e.name}</option>)}
+      </select>
+      <p class="empty" id="no-reviews" hidden>The first review is coming.</p>
+      <div id="review-list">
+        {st.reviews.length === 0
+          ? <p class="empty">The first review is coming.</p>
+          : st.reviews.map((r) => <div data-era={String(bookByNumber(r.data.book!)?.era ?? '')}><PostItem post={r} /></div>)}
+      </div>
+    </div>
+    <aside class="side">
+      <div class="panel">
+        <div class="panel-title">Up next</div>
+        <div class="links">
+          {up.map((b) => <a href={shelfUrl()}>{splitTitle(b.title).main}<small>{b.author} &middot; {eraName(b.era)}</small></a>)}
+        </div>
+      </div>
+    </aside>
+  </div>
+  <script is:inline>
+    const sel = document.getElementById('era-filter');
+    sel?.addEventListener('change', () => {
+      let shown = 0;
+      document.querySelectorAll('#review-list [data-era]').forEach((el) => {
+        const ok = !sel.value || el.dataset.era === sel.value;
+        el.hidden = !ok; if (ok) shown++;
+      });
+      document.getElementById('no-reviews').hidden = shown > 0;
+    });
+  </script>
+</BaseLayout>

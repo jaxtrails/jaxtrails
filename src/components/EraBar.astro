@@ -1,0 +1,12 @@
+---
+import { ERAS } from '../lib/books';
+interface Props { readByEra: number[]; current?: number; }
+const { readByEra, current = 0 } = Astro.props;
+---
+<div class="erabar" role="img" aria-label="Progress by era">
+  {ERAS.map((e) => {
+    const done = readByEra[e.n - 1] ?? 0;
+    const pct = Math.min(100, Math.round((done / e.quota) * 100));
+    return <span class:list={['seg', e.n === current && 'seg--here']} title={`${e.name}: ${done} of ${e.quota}`}><i style={`width:${pct}%`}></i></span>;
+  })}
+</div>

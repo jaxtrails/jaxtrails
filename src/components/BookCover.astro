@@ -1,0 +1,9 @@
+---
+interface Props { n: number; size?: 'sm' | 'md' | 'lg'; }
+const { n, size = 'md' } = Astro.props;
+---
+<span class:list={['cover', `cover--${size}`]} aria-hidden="true">
+  <span class="cover-stripes"></span>
+  <span class="cover-stars">&#9733; &#9733; &#9733;</span>
+  <span class="cover-num"><b>{n}</b></span>
+</span>

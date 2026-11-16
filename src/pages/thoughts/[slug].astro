@@ -12,6 +12,9 @@ import {
   trailsForThought,
   type Thought,
 } from '../../lib/content';
+import BookCover from '../../components/BookCover.astro';
+import EraBar from '../../components/EraBar.astro';
+import { BOOKS, ERAS, SERIES, bookByNumber, getSeriesState, seriesUrl, splitTitle } from '../../lib/books';
 
 export async function getStaticPaths() {
   const posts = await getThoughts();
@@ -24,6 +27,14 @@ const parkIds = new Set(parks.map((p) => p.id));
 const related = trailsForThought(post, allTrails).filter((t) => parkIds.has(t.data.park.id));
 const catSlug = categorySlug(post.data.category);
 const { Content } = await render(post);
+const book = post.data.book ? bookByNumber(post.data.book) : undefined;
+const inSeries = post.data.series === SERIES.slug;
+const st = book ? await getSeriesState() : undefined;
+const era = book ? ERAS[book.era - 1] : undefined;
+const prev = book ? bookByNumber(book.n - 1) : undefined;
+const next = book ? bookByNumber(book.n + 1) : undefined;
+const sameEra = book ? BOOKS.filter((b) => b.era === book.era && b.n !== book.n).slice(0, 3) : [];
+const link = (n: number) => { const r = st?.reviewByBook.get(n); return r ? `/thoughts/${r.id}/` : '/thoughts/series/america-250/shelf/'; };
 ---
 
 <BaseLayout title={post.data.title} description={post.data.summary} active="thoughts">
@@ -31,6 +42,7 @@ const { Content } = await render(post);
     <a href="/thoughts/">Trail Thoughts</a>
     <span aria-hidden="true">&rsaquo;</span>
     <a href={`/thoughts/category/${catSlug}/`}>{post.data.category}</a>
+    {inSeries && (<><span aria-hidden="true">&rsaquo;</span><a href={seriesUrl()}>America 250</a></>)}
   </nav>
 
   <header class="article-head">
@@ -40,7 +52,40 @@ const { Content } = await render(post);
     <div class="label">{fmtDate(post.data.date)}</div>
   </header>
 
+  {book && era && (
+    <div class="book-head">
+      <BookCover n={book.n} size="lg" />
+      <div>
+        <div class="label">Era {era.n} of 14 &middot; {era.name}</div>
+        <EraBar readByEra={st!.readByEra} current={era.n} />
+        <dl class="factbox">
+          <div><dt>Author</dt><dd>{book.author}</dd></div>
+          <div><dt>First published</dt><dd>{book.year}</dd></div>
+          <div><dt>Era</dt><dd>{era.name}</dd></div>
+          <div><dt>Type</dt><dd>{book.type}</dd></div>
+          <div><dt>Length</dt><dd>About {book.pages} pages</dd></div>
+          <div><dt>Book number</dt><dd>{book.n} of {SERIES.total}</dd></div>
+        </dl>
+      </div>
+    </div>
+  )}
+
   <div class="prose"><Content /></div>
+
+  {book && (
+    <>
+      <nav class="prevnext" aria-label="Series navigation">
+        {prev ? <a href={link(prev.n)}><span class="label">Previous</span>{splitTitle(prev.title).main}</a> : <span><span class="label">Previous</span>Start of the series</span>}
+        {next ? <a href={link(next.n)}><span class="label">Next &middot; Book {next.n}</span>{splitTitle(next.title).main}</a> : <span><span class="label">Next</span>End of the series</span>}
+      </nav>
+      {sameEra.length > 0 && (
+        <section class="related" style="max-width: 34em">
+          <h2>More from this era</h2>
+          <div class="links">{sameEra.map((b) => <a href={link(b.n)}>{splitTitle(b.title).main}<small>{b.author}</small></a>)}</div>
+        </section>
+      )}
+    </>
+  )}
 
   {
     related.length > 0 && (

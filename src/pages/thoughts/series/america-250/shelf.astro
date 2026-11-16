@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import { BOOKS, ERAS, SERIES, STATUS_LABEL, getSeriesState, seriesUrl } from '../../../../lib/books';
+
+const st = await getSeriesState();
+const rows = BOOKS.map((b) => ({ ...b, status: st.status(b.n), url: st.reviewByBook.get(b.n)?.id }));
+---
+<BaseLayout title="The shelf · America 250" description="All 250 books in the America 250 series." active="thoughts">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/thoughts/">Trail Thoughts</a><span aria-hidden="true">&rsaquo;</span>
+    <a href="/thoughts/category/books/">Books</a><span aria-hidden="true">&rsaquo;</span>
+    <a href={seriesUrl()}>America 250</a>
+  </nav>
+  <section class="page-head" style="padding-top:24px"><h1 class="sign sign--right sign--page usa-sign">The Shelf</h1></section>
+  <form class="shelf-search" role="search" onsubmit="return false">
+    <input id="q" type="search" placeholder="Search title, author or era" aria-label="Search the shelf" />
+    <button type="button" id="go" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M13 13l5 5"/></svg>
+    </button>
+  </form>
+  <div class="chips" id="status-chips" role="group" aria-label="Filter by status">
+    <button class="chip" data-s="" aria-current="true">All</button>
+    <button class="chip" data-s="read">Read</button>
+    <button class="chip" data-s="reading">Reading</button>
+    <button class="chip" data-s="next">Up next</button>
+  </div>
+  <div class="table-wrap">
+    <table class="shelf">
+      <thead><tr><th>No.</th><th>Book</th><th>Era</th><th>Status</th></tr></thead>
+      <tbody>
+        {rows.map((b) => (
+          <tr data-status={b.status} data-text={`${b.title} ${b.author} ${ERAS[b.era - 1].name}`.toLowerCase()} hidden={b.n > 16}>
+            <td class="num">{b.n}</td>
+            <td>{b.url ? <a href={`/thoughts/${b.url}/`}>{b.title}</a> : <span class="bt">{b.title}</span>}<small>{b.author}</small></td>
+            <td>{ERAS[b.era - 1].name}</td>
+            <td><span class:list={['pill', `pill--${b.status}`]}>{STATUS_LABEL[b.status]}</span></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="series-count" id="count" style="margin-top:16px"></p>
+  <button class="chip" id="more" type="button">Show more</button>
+  <script is:inline>
+    const rows = [...document.querySelectorAll('tbody tr')];
+    let limit = 16, status = '', q = '';
+    const count = document.getElementById('count'), more = document.getElementById('more');
+    function render() {
+      const match = rows.filter((r) => (!status || r.dataset.status === status) && (!q || r.dataset.text.includes(q)));
+      rows.forEach((r) => (r.hidden = true));
+      match.slice(0, limit).forEach((r) => (r.hidden = false));
+      const shown = Math.min(limit, match.length);
+      count.textContent = 'Showing ' + shown + ' of ' + match.length;
+      more.hidden = shown >= match.length;
+    }
+    const input = document.getElementById('q');
+    const run = () => { q = input.value.trim().toLowerCase(); limit = 16; render(); };
+    input.addEventListener('input', run);
+    document.getElementById('go').addEventListener('click', run);
+    document.querySelectorAll('#status-chips .chip').forEach((c) => c.addEventListener('click', () => {
+      document.querySelectorAll('#status-chips .chip').forEach((x) => x.removeAttribute('aria-current'));
+      c.setAttribute('aria-current', 'true'); status = c.dataset.s; limit = 16; render();
+    }));
+    more.addEventListener('click', () => { limit += 50; render(); });
+    render();
+  </script>
+</BaseLayout>
