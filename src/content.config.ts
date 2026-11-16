@@ -42,6 +42,10 @@ const thoughts = defineCollection({
     category: z.enum(['Reflections', 'Books', 'Everything Else']),
     summary: z.string(),
     relatedTrails: z.array(reference('trails')).default([]),
+    // Reading series. Set series: america-250 on any post that belongs to it.
+    // Add book: <number from the list> on a review; that marks the book as read.
+    series: z.enum(['america-250']).optional(),
+    book: z.number().int().min(1).max(250).optional(),
     draft: z.boolean().default(false),
     sample: z.boolean().default(false),
   }),

@@ -286,3 +286,71 @@ a.sign:hover { text-decoration: none; background: #26382e; }
   border: 1px dashed var(--muted); color: var(--muted);
   font-family: var(--label); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
 }
+
+/* ---------- Books / America 250 ---------- */
+:root { --usa-navy: #14213d; --usa-spine: #0a1226; --usa-red: #b22234; --usa-cream: #f4f1e8; }
+.usa-sign { background: var(--usa-navy); }
+.usa-stars { color: var(--usa-cream); letter-spacing: 0.3em; font-size: 14px; }
+.series-card, .shelf-box {
+  display: block; background: var(--usa-navy); color: var(--usa-cream); text-decoration: none; border: 1px solid var(--usa-spine);
+}
+.series-card:hover, .shelf-box:hover { text-decoration: none; background: #1a2a4d; }
+.usa-stripe { display: block; height: 10px; background: repeating-linear-gradient(90deg, var(--usa-red) 0 24px, var(--usa-cream) 24px 48px); }
+.series-body, .shelf-box { display: flex; flex-direction: column; gap: 12px; padding: 28px; }
+.shelf-box { margin-top: 32px; }
+.series-name { font-family: var(--label); font-weight: 600; font-size: clamp(36px, 8vw, 56px); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1; }
+.shelf-title { font-family: var(--label); font-weight: 600; font-size: clamp(26px, 5vw, 36px); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.1; }
+.series-count { font-family: var(--label); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: inherit; opacity: 0.85; }
+.series-open { font-family: var(--label); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--nav-active); }
+.erabar { display: flex; gap: 3px; width: 100%; }
+.erabar .seg { flex: 1; height: 12px; background: rgba(120,130,140,.28); position: relative; }
+.erabar .seg i { position: absolute; inset: 0 auto 0 0; background: var(--usa-red); }
+.erabar .seg--here { outline: 2px solid var(--blaze); outline-offset: 1px; }
+.era-list { list-style: none; margin: 20px 0 0; padding: 0; columns: 2 280px; column-gap: 40px; font-size: 18px; }
+.era-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line-soft); break-inside: avoid; }
+.era-list b { font-family: var(--label); font-weight: 500; color: var(--muted); }
+.now { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.book-title { font-size: 26px; font-weight: 600; line-height: 1.2; margin-bottom: 6px; }
+.cover {
+  position: relative; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; flex: 0 0 auto;
+  background: var(--usa-navy); border-left: 8px solid var(--usa-spine); color: var(--usa-cream); overflow: hidden;
+  width: 96px; height: 136px;
+}
+.cover--sm { width: 56px; height: 80px; border-left-width: 5px; }
+.cover--lg { width: 150px; height: 212px; }
+.cover-stripes { position: absolute; left: 0; right: 0; top: 0; height: 10px; background: repeating-linear-gradient(90deg, var(--usa-red) 0 8px, var(--usa-cream) 8px 16px); }
+.cover-stars { position: absolute; top: 18px; font-size: 10px; letter-spacing: .25em; }
+.cover-num { display: grid; place-items: center; width: 54%; aspect-ratio: 1; border-radius: 50%; background: var(--usa-cream); border: 4px solid var(--usa-red); color: var(--usa-navy); margin-top: 14px; }
+.cover-num b { font-family: var(--label); font-weight: 600; font-size: 1.5em; line-height: 1; }
+.cover--lg .cover-num b { font-size: 2.2em; }
+.era-select, .shelf-search input {
+  font: inherit; font-size: 17px; min-height: 44px; padding: 0 12px; border: 1px solid var(--pine); background: var(--card); color: var(--ink);
+  display: block; margin: 6px 0 20px;
+}
+.shelf-search { display: flex; max-width: 520px; margin-bottom: 16px; }
+.shelf-search input { flex: 1; margin: 0; border-right: 0; }
+.shelf-search button { min-width: 48px; border: 1px solid var(--pine); background: var(--pine); color: var(--on-pine); cursor: pointer; display: grid; place-items: center; }
+.chips button.chip, button.chip { background: transparent; cursor: pointer; font-family: var(--label); }
+.chips button.chip[aria-current='true'] { background: var(--pine); color: var(--on-pine); }
+.table-wrap { overflow-x: auto; }
+.shelf { width: 100%; border-collapse: collapse; font-size: 18px; }
+.shelf th { text-align: left; font-family: var(--label); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding: 10px 12px; border-bottom: 2px solid var(--pine); }
+.shelf td { padding: 12px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+.shelf td.num { font-family: var(--label); color: var(--muted); width: 56px; }
+.shelf td small { display: block; color: var(--muted); font-size: 15px; }
+.shelf td a, .shelf .bt { font-weight: 600; color: var(--ink); }
+.shelf tr[hidden] { display: none; }
+.pill { font-family: var(--label); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; padding: 2px 10px; border: 1px solid var(--muted); white-space: nowrap; }
+.pill--read { background: var(--usa-navy); color: var(--usa-cream); border-color: var(--usa-navy); }
+.pill--reading { border-color: var(--usa-red); color: var(--usa-red); }
+.book-head { display: flex; flex-wrap: wrap; gap: 28px 36px; align-items: flex-start; margin-bottom: 36px; }
+.book-head > div { flex: 1 1 320px; min-width: 0; }
+.book-head .erabar { margin: 12px 0 20px; }
+.factbox { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0 24px; background: var(--card); border: 1px solid var(--line); padding: 8px 20px; }
+.factbox div { padding: 10px 0; border-bottom: 1px solid var(--line-soft); }
+.factbox dt { font-family: var(--label); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.factbox dd { margin: 2px 0 0; font-size: 18px; font-weight: 600; }
+.prevnext { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 48px; max-width: 34em; }
+.prevnext > * { flex: 1 1 220px; padding: 16px 18px; border: 1px solid var(--line); background: var(--card); text-decoration: none; color: var(--ink); font-weight: 600; }
+.prevnext .label { display: block; margin-bottom: 4px; }
+.prevnext > span { color: var(--muted); }
